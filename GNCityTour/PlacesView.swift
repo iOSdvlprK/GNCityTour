@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  PlacesView.swift
 //  GNCityTour
 //
 //  Created by joe on 1/24/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct PlacesView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +20,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    PlacesView()
 }

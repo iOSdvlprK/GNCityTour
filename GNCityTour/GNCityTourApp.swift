@@ -11,7 +11,7 @@ import SwiftUI
 struct GNCityTourApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PlacesView()
         }
     }
 }
