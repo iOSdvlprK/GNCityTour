@@ -12,6 +12,17 @@ class APIClient {
     private let baseURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     private let googlePlacesKey = apiKey
     
+    func getPlaces(forKeyword keyword: String, latitude: Double, longitude: Double) async {
+        guard let url = createURL(latitude: latitude, longitude: longitude, keyword: keyword) else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+            print(json)
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     private func createURL(latitude: Double, longitude: Double, keyword: String) -> URL? {
         var urlComponents = URLComponents(string: baseURL)
         var queryItems: [URLQueryItem] = [
