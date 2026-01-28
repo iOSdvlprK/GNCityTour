@@ -16,8 +16,10 @@ class APIClient {
         guard let url = createURL(latitude: latitude, longitude: longitude, keyword: keyword) else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
-            print(json)
+//            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+//            print(json)
+            let decodedJSON = try JSONDecoder().decode(PlacesResponseModel.self, from: data)
+            print(decodedJSON)
         } catch {
             print(error.localizedDescription)
         }
@@ -25,7 +27,7 @@ class APIClient {
     
     private func createURL(latitude: Double, longitude: Double, keyword: String) -> URL? {
         var urlComponents = URLComponents(string: baseURL)
-        var queryItems: [URLQueryItem] = [
+        let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "location", value: "\(latitude),\(longitude)"),
             URLQueryItem(name: "rankby", value: "distance"),
             URLQueryItem(name: "keyword", value: keyword),
