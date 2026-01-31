@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlacesView: View {
-    let apiClient = APIClient()
+    @State private var viewModel = PlacesViewModel()
     
     var body: some View {
         VStack {
@@ -18,7 +18,7 @@ struct PlacesView: View {
             Text("Hello, world!")
         }
         .task {
-            await apiClient.getPlaces(forKeyword: "Coffee", latitude: 40.741895, longitude: -73.989308)
+//            await apiClient.getPlaces(forKeyword: "Coffee", latitude: 40.741895, longitude: -73.989308)
         }
     }
 }
