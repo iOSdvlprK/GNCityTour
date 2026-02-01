@@ -13,7 +13,6 @@ import CoreLocation
 class PlacesViewModel: NSObject {
     private let apiClient = APIClient()
     private let locationManager = CLLocationManager()
-    var currentLocation: CLLocation?
     
     override init() {
         super.init()
