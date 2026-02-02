@@ -34,8 +34,8 @@ class APIClient {
         }
     }
     
-    func getPlaces(forKeyword keyword: String, latitude: Double, longitude: Double) async {
-        guard let url = createURL(latitude: latitude, longitude: longitude, keyword: keyword) else { return }
+    func getPlaces(forKeyword keyword: String, location: CLLocation) async {
+        guard let url = createURL(location: location, keyword: keyword) else { return }
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let response = response as? HTTPURLResponse else {
@@ -56,10 +56,10 @@ class APIClient {
         }
     }
     
-    private func createURL(latitude: Double, longitude: Double, keyword: String) -> URL? {
+    private func createURL(location: CLLocation, keyword: String) -> URL? {
         var urlComponents = URLComponents(string: baseURL)
         let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "location", value: "\(latitude),\(longitude)"),
+            URLQueryItem(name: "location", value: "\(location.coordinate.latitude),\(location.coordinate.longitude)"),
             URLQueryItem(name: "rankby", value: "distance"),
             URLQueryItem(name: "keyword", value: keyword),
             URLQueryItem(name: "key", value: googlePlacesKey)

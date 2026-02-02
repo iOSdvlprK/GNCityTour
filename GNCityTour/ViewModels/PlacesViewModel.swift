@@ -20,8 +20,9 @@ class PlacesViewModel: NSObject {
         locationManager.requestWhenInUseAuthorization()
     }
     
-    func fetchPlaces() {
-        
+    func fetchPlaces(location: CLLocation) async {
+        print("DEBUG: latitude \(location.coordinate.latitude), longitude \(location.coordinate.longitude)")
+        await apiClient.getPlaces(forKeyword: "Coffee", location: location)
     }
 }
 
@@ -33,7 +34,10 @@ extension PlacesViewModel: @MainActor CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
+            print("Location access has been granted.")
             locationManager.requestLocation()
+        case .denied:
+            print("Location access has been denied.")
         default:
             break
         }
@@ -41,6 +45,8 @@ extension PlacesViewModel: @MainActor CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        currentLocation = location
+        Task {
+            await fetchPlaces(location: location)
+        }
     }
 }
