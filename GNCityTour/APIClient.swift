@@ -34,25 +34,26 @@ class APIClient {
         }
     }
     
-    func getPlaces(forKeyword keyword: String, location: CLLocation) async {
-        guard let url = createURL(location: location, keyword: keyword) else { return }
+    func getPlaces(forKeyword keyword: String, location: CLLocation) async -> Result<PlacesResponseModel, PlacesError> {
+        guard let url = createURL(location: location, keyword: keyword) else {
+            return .failure(.invalidURL)
+        }
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let response = response as? HTTPURLResponse else {
-                return
+                return .failure(.invalidResponse)
             }
             let responseType = responseType(statusCode: response.statusCode)
             switch responseType {
             case .informational, .redirection, .clientError, .serverError, .undefined:
-                print("error in request")
+                return .failure(.apiError)
             case .success:
                 let decodedJSON = try JSONDecoder().decode(PlacesResponseModel.self, from: data)
-                print(decodedJSON)
+                return .success(decodedJSON)
             }
-//            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
-//            print(json)
         } catch {
             print(error.localizedDescription)
+            return .failure(.apiError)
         }
     }
     
