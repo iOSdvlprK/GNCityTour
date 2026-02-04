@@ -13,11 +13,12 @@ import CoreLocation
 class PlacesViewModel: NSObject {
     private let apiClient = APIClient()
     private let locationManager = CLLocationManager()
+    var selectedKeyword: Keyword = .cafe
     
     override init() {
         super.init()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+//        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization()
     }
     
     func fetchPlaces(location: CLLocation) async {

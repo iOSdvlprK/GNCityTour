@@ -12,6 +12,8 @@ class APIClient {
     private let baseURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     private let googlePlacesKey = apiKey
     
+    typealias PlacesResult = Result<PlacesResponseModel, PlacesError>
+    
     private func responseType(statusCode: Int) -> ResponseType {
         switch statusCode {
         case 100..<200:
@@ -34,7 +36,7 @@ class APIClient {
         }
     }
     
-    func getPlaces(forKeyword keyword: String, location: CLLocation) async -> Result<PlacesResponseModel, PlacesError> {
+    func getPlaces(forKeyword keyword: String, location: CLLocation) async -> PlacesResult {
         guard let url = createURL(location: location, keyword: keyword) else {
             return .failure(.invalidURL)
         }

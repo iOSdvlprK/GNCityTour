@@ -10,15 +10,29 @@ import SwiftUI
 struct PlacesView: View {
     @State private var viewModel = PlacesViewModel()
     
+    private var HorizontalList: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 12) {
+                ForEach(Keyword.allCases) { keyword in
+                    Button(action: {
+                        viewModel.selectedKeyword = keyword
+                    }, label: {
+                        Text(keyword.title)
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(viewModel.selectedKeyword == keyword ? .gray : .black)
+                            .padding(.horizontal, 10)
+                    })
+                    .scaleEffect(viewModel.selectedKeyword == keyword ? 0.85 : 1)
+                }
+            }
+            .frame(height: 50)
+        }
+    }
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .task {
-//            await apiClient.getPlaces(forKeyword: "Coffee", latitude: 40.741895, longitude: -73.989308)
+            HorizontalList
+            Spacer()
         }
     }
 }
