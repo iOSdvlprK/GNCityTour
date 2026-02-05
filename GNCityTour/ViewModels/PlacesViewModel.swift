@@ -14,16 +14,24 @@ class PlacesViewModel: NSObject {
     private let apiClient = APIClient()
     private let locationManager = CLLocationManager()
     var selectedKeyword: Keyword = .cafe
+    var places: [PlaceRowModel] = []
     
     override init() {
         super.init()
-//        locationManager.delegate = self
-//        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
     }
     
     func fetchPlaces(location: CLLocation) async {
         print("DEBUG: latitude \(location.coordinate.latitude), longitude \(location.coordinate.longitude)")
-        await apiClient.getPlaces(forKeyword: "Coffee", location: location)
+        let result = await apiClient.getPlaces(forKeyword: "Coffee", location: location)
+        switch result {
+        case .success(let placesResponseModel):
+            let places = placesResponseModel.results
+            self.places = places.compactMap { PlaceRowModel(place: $0) }
+        case .failure(let placesError):
+            break
+        }
     }
 }
 

@@ -32,6 +32,11 @@ struct PlacesView: View {
     var body: some View {
         VStack {
             HorizontalList
+            List {
+                ForEach(viewModel.places) { place in
+                    Text(place.name)
+                }
+            }
             Spacer()
         }
     }
