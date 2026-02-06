@@ -34,7 +34,32 @@ struct PlacesView: View {
             HorizontalList
             List {
                 ForEach(viewModel.places) { place in
-                    Text(place.name)
+                    HStack {
+                        AsyncImage(url: place.photoURL) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 50, height: 50)
+                                .clipped()
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        } placeholder: {
+                            ProgressView()
+                                .frame(width: 50, height: 50)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(place.name)
+                                .font(.system(size: 15, weight: .semibold))
+                            Text(place.address)
+                                .font(.system(size: 14))
+                        }
+                        Spacer()
+                        HStack {
+                            Image(systemName: "star.fill")
+                                .foregroundStyle(.yellow)
+                            Text("\(Int(place.rating))")
+                                .font(.system(size: 14))
+                        }
+                    }
                 }
             }
             Spacer()
