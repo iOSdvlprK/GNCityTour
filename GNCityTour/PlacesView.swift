@@ -15,7 +15,9 @@ struct PlacesView: View {
             LazyHStack(spacing: 12) {
                 ForEach(Keyword.allCases) { keyword in
                     Button(action: {
-                        viewModel.selectedKeyword = keyword
+                        Task {
+                            await viewModel.changeKeyword(to: keyword)
+                        }
                     }, label: {
                         Text(keyword.title)
                             .font(.system(size: 15, weight: .semibold))
