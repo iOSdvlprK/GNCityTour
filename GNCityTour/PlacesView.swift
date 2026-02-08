@@ -32,39 +32,46 @@ struct PlacesView: View {
     }
     
     var body: some View {
-        VStack {
-            HorizontalList
-            List {
-                ForEach(viewModel.places) { place in
-                    HStack {
-                        AsyncImage(url: place.photoURL) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 50, height: 50)
-                                .clipped()
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        } placeholder: {
-                            ProgressView()
-                                .frame(width: 50, height: 50)
-                        }
-                        VStack(alignment: .leading) {
-                            Text(place.name)
-                                .font(.system(size: 15, weight: .semibold))
-                            Text(place.address)
-                                .font(.system(size: 14))
-                        }
-                        Spacer()
+        ZStack {
+            VStack {
+                HorizontalList
+                List {
+                    ForEach(viewModel.places) { place in
                         HStack {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(.yellow)
-                            Text("\(Int(place.rating))")
-                                .font(.system(size: 14))
+                            AsyncImage(url: place.photoURL) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } placeholder: {
+                                ProgressView()
+                                    .frame(width: 50, height: 50)
+                            }
+                            VStack(alignment: .leading) {
+                                Text(place.name)
+                                    .font(.system(size: 15, weight: .semibold))
+                                Text(place.address)
+                                    .font(.system(size: 14))
+                            }
+                            Spacer()
+                            HStack {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(.yellow)
+                                Text("\(Int(place.rating))")
+                                    .font(.system(size: 14))
+                            }
                         }
                     }
                 }
+                Spacer()
             }
-            Spacer()
+            if viewModel.isLoading {
+                Color.black.opacity(0.5).ignoresSafeArea()
+                ProgressView()
+                    .tint(Color.white)
+            }
         }
     }
 }

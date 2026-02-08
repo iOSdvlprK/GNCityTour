@@ -16,6 +16,7 @@ class PlacesViewModel: NSObject {
     private var currentLocation: CLLocation?
     var selectedKeyword: Keyword = .cafe
     var places: [PlaceRowModel] = []
+    var isLoading = false
     
     override init() {
         super.init()
@@ -30,19 +31,20 @@ class PlacesViewModel: NSObject {
         } else {
             selectedKeyword = keyword
         }
+        isLoading = true
         let result = await apiClient.getPlaces(forKeyword: keyword.apiName, location: currentLocation)
-        switch result {
-        case .success(let placesResponseModel):
-            let places = placesResponseModel.results
-            self.places = places.compactMap { PlaceRowModel(place: $0) }
-        case .failure(let placesError):
-            break
-        }
+        isLoading = false
+        parseAPI(result: result)
     }
     
     func fetchPlaces(location: CLLocation) async {
-        print("DEBUG: latitude \(location.coordinate.latitude), longitude \(location.coordinate.longitude)")
+        isLoading = true
         let result = await apiClient.getPlaces(forKeyword: "Coffee", location: location)
+        isLoading = false
+        parseAPI(result: result)
+    }
+    
+    private func parseAPI(result: APIClient.PlacesResult) {
         switch result {
         case .success(let placesResponseModel):
             let places = placesResponseModel.results
