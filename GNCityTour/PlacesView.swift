@@ -67,6 +67,12 @@ struct PlacesView: View {
                 }
                 Spacer()
             }
+            .alert(viewModel.alertTitle, isPresented: $viewModel.presentAlert) {
+                Button("OK", action: {})
+            } message: {
+                Text(viewModel.alertMessage)
+            }
+
             if viewModel.isLoading {
                 Color.black.opacity(0.5).ignoresSafeArea()
                 ProgressView()

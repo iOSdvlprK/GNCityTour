@@ -17,6 +17,9 @@ class PlacesViewModel: NSObject {
     var selectedKeyword: Keyword = .cafe
     var places: [PlaceRowModel] = []
     var isLoading = false
+    var alertTitle = ""
+    var alertMessage = ""
+    var presentAlert = false
     
     override init() {
         super.init()
@@ -50,7 +53,15 @@ class PlacesViewModel: NSObject {
             let places = placesResponseModel.results
             self.places = places.compactMap { PlaceRowModel(place: $0) }
         case .failure(let placesError):
-            break
+            switch placesError {
+            case .invalidURL, .invalidResponse, .badRequestError:
+                alertTitle = "Something Has Gone Wrong"
+                alertMessage = "We apologize and we are looking into the issue. Please try again later."
+            case .serverError:
+                alertTitle = "Something Has Gone Wrong"
+                alertMessage = "Please check your internet connection or please try again later."
+            }
+            presentAlert = true
         }
     }
 }

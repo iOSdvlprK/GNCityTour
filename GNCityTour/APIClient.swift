@@ -47,15 +47,19 @@ class APIClient {
             }
             let responseType = responseType(statusCode: response.statusCode)
             switch responseType {
-            case .informational, .redirection, .clientError, .serverError, .undefined:
-                return .failure(.apiError)
+            case .serverError, .informational, .redirection, .undefined:
+                print("DEBUG: server error in request")
+                return .failure(.serverError)
+            case .clientError:
+                print("DEBUG: bad server request error")
+                return .failure(.badRequestError)
             case .success:
                 let decodedJSON = try JSONDecoder().decode(PlacesResponseModel.self, from: data)
                 return .success(decodedJSON)
             }
         } catch {
-            print(error.localizedDescription)
-            return .failure(.apiError)
+            print("DEBUG: \(error.localizedDescription)")
+            return .failure(.badRequestError)
         }
     }
     

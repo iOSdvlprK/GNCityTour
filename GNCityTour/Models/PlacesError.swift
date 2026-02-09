@@ -8,5 +8,5 @@
 import Foundation
 
 enum PlacesError: Error {
-    case invalidURL, invalidResponse, apiError
+    case invalidURL, invalidResponse, badRequestError, serverError
 }
