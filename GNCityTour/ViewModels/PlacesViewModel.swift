@@ -74,12 +74,17 @@ extension PlacesViewModel: @MainActor CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
-            print("Location access has been granted.")
             locationManager.requestLocation()
-        case .denied:
-            print("Location access has been denied.")
-        default:
-            break
+        case .denied, .restricted:
+            alertTitle = "No Location Access"
+            alertMessage = "Please grant location access in settings to allow the app to find places around you."
+            presentAlert = true
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            alertTitle = "No Location Access"
+            alertMessage = "Please grant location access in settings to allow the app to find places around you."
+            presentAlert = true
         }
     }
     
